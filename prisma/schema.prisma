@@ -1,0 +1,96 @@
+// This is your Prisma schema file
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  tasks Task[]
+  dailyStats DailyStats[]
+}
+
+enum TaskCategory {
+  WORK
+  STUDY
+  HEALTH
+  PERSONAL
+  CUSTOM
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum SkipReason {
+  LACK_OF_DISCIPLINE
+  BAD_PLANNING
+  FATIGUE
+  DISTRACTION
+  UNREALISTIC_TASK
+  OTHER
+}
+
+model Task {
+  id                String       @id @default(cuid())
+  userId            String
+  name              String
+  category          TaskCategory
+  customCategory    String?      // For CUSTOM category
+  priority          TaskPriority
+  estimatedDuration Int          // in minutes
+  scheduledDate     DateTime     @db.Date
+  completed         Boolean      @default(false)
+  completedAt       DateTime?
+  skipped           Boolean      @default(false)
+  skipReason        SkipReason?
+  skipExplanation   String?      // Text explanation when skipped
+  isRecurring       Boolean      @default(false)
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, scheduledDate])
+  @@index([scheduledDate])
+}
+
+model DailyStats {
+  id                    String   @id @default(cuid())
+  userId                String
+  date                  DateTime @db.Date @unique
+  totalTasks            Int
+  completedTasks        Int
+  skippedTasks          Int
+  disciplineScore       Float    // 0-100
+  tasksModified         Int      @default(0)
+  tasksPostponed        Int      @default(0)
+  tasksDeleted          Int      @default(0)
+  
+  // Reason counts for analytics
+  lackOfDisciplineCount Int      @default(0)
+  badPlanningCount      Int      @default(0)
+  fatigueCount          Int      @default(0)
+  distractionCount      Int      @default(0)
+  unrealisticTaskCount  Int      @default(0)
+  otherCount            Int      @default(0)
+
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, date])
+}
