@@ -36,7 +36,7 @@ export default function SkipReasonModal({ onConfirm, onCancel }: SkipReasonModal
       <div className="bg-white rounded-lg shadow-xl max-w-md w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="flex items-center justify-between p-4 border-b border-gray-200">
-          <h3 className="text-lg font-semibold text-gray-900">Why didn't you complete this task?</h3>
+          <h3 className="text-lg font-semibold text-gray-900">Why didn&apos;t you complete this task?</h3>
           <button
             onClick={onCancel}
             className="p-1 hover:bg-gray-100 rounded transition-colors"

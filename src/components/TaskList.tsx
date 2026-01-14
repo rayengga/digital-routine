@@ -33,7 +33,7 @@ export default function TaskList({ tasks, onTaskUpdated, onTaskDeleted }: TaskLi
     return (
       <div className="bg-white rounded-lg shadow-sm p-8 text-center">
         <p className="text-gray-500">No tasks scheduled for today.</p>
-        <p className="text-sm text-gray-400 mt-2">Click "Add Task" to get started!</p>
+        <p className="text-sm text-gray-400 mt-2">Click &quot;Add Task&quot; to get started!</p>
       </div>
     );
   }
